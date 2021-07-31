@@ -30,6 +30,11 @@ export default new Vuex.Store({
         blogDate: "Jul 4, 2021",
       },
     ],
+    blogHTML: "Write your blog title here..",
+    blogTitle: "",
+    blogPhotoName: "",
+    blogPhotoFileURL: null,
+    blogPhotoPreview: null,
     editPost: null,
     user: null,
     profileAdmin: null,
@@ -41,6 +46,18 @@ export default new Vuex.Store({
     profileInitials: null,
   },
   mutations: {
+    newBlogPost(state, payload) {
+      state.blogHTML = payload;
+    },
+    updateBlogTitle(state, payload){
+      state.blogTitle = payload;
+    },
+    fileNameChange(state, payload) {
+      state.blogPhotoName = payload;
+    },
+    createFileURL(state, payload) {
+      state.blogPhotoFileURL = payload;
+    },
     toggleEditPost(state, payload) {
       state.editPost = payload;
     },
@@ -74,9 +91,6 @@ export default new Vuex.Store({
       const dbResults = await dataBase.get();
       commit("setProfileInfo", dbResults);
       commit("setProfileInitials");
-      // const token = await user.getIdTokenResult();
-      // const admin = await token.claims.admin;
-      // commit("setProfileAdmin", admin);
     },
     async updateUserSettings({ commit, state }) {
       const dataBase = await db.collection("users").doc(state.profileId);
