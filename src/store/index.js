@@ -8,28 +8,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    sampleBlogCards: [
-      {
-        blogTitle: "Blog Card #1",
-        blogCoverPhoto: "stock-1",
-        blogDate: "Jul 4, 2021",
-      },
-      {
-        blogTitle: "Blog Card #2",
-        blogCoverPhoto: "stock-2",
-        blogDate: "Jul 4, 2021",
-      },
-      {
-        blogTitle: "Blog Card #3",
-        blogCoverPhoto: "stock-3",
-        blogDate: "Jul 4, 2021",
-      },
-      {
-        blogTitle: "Blog Card #4",
-        blogCoverPhoto: "stock-4",
-        blogDate: "Jul 4, 2021",
-      },
-    ],
+    blogPosts: [],
+    postLoaded: null,
     blogHTML: "Write your blog title here..",
     blogTitle: "",
     blogPhotoName: "",
@@ -45,11 +25,20 @@ export default new Vuex.Store({
     profileId: null,
     profileInitials: null,
   },
+  getters: {
+    blogPostsFeed(state) {
+      console.log(state.blogPosts.slice(2))
+      return state.blogPosts.slice(0, 2);
+    },
+    blogPostsCards(state) {
+      return state.blogPosts.slice(0, 2);
+    },
+  },
   mutations: {
     newBlogPost(state, payload) {
       state.blogHTML = payload;
     },
-    updateBlogTitle(state, payload){
+    updateBlogTitle(state, payload) {
       state.blogTitle = payload;
     },
     fileNameChange(state, payload) {
@@ -103,6 +92,24 @@ export default new Vuex.Store({
         username: state.profileUsername,
       });
       commit("setProfileInitials");
+    },
+    async getPost({ state }) {
+      const dataBase = await db.collection("blogPosts").orderBy("date", "desc");
+      const dbResults = await dataBase.get();
+      dbResults.forEach((doc) => {
+        if (!state.blogPosts.some((post) => post.blogID === doc.id)) {
+          const data = {
+            blogID: doc.data().blogID,
+            blogHTML: doc.data().blogHTML,
+            blogCoverPhoto: doc.data().blogCoverPhoto,
+            blogTitle: doc.data().blogTitle,
+            blogDate: doc.data().date,
+            blogCoverPhotoName: doc.data().blogCoverPhotoName,
+          };
+          state.blogPosts.push(data);
+        }
+      });
+      state.postLoaded = true;
     },
   },
   modules: {

@@ -79,6 +79,7 @@ const routes = [
     component: CreatePost,
     meta: {
       title: "Create Post",
+      requiresAuth: true,
     },
   },
   {
@@ -87,6 +88,7 @@ const routes = [
     component: BlogPreview,
     meta: {
       title: "Blog Post Preview",
+      requiresAuth: true,
     },
   },
   {
@@ -95,6 +97,16 @@ const routes = [
     component: ViewBlog,
     meta: {
       title: "Blog Post View",
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/view-blog/:blogid",
+    name: "ViewBlog",
+    component: ViewBlog,
+    meta: {
+      title: "View Blog Post",
+      requiresAuth: false,
     },
   },
 ];
