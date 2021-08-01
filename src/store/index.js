@@ -27,7 +27,6 @@ export default new Vuex.Store({
   },
   getters: {
     blogPostsFeed(state) {
-      console.log(state.blogPosts.slice(2))
       return state.blogPosts.slice(0, 2);
     },
     blogPostsCards(state) {
@@ -43,6 +42,9 @@ export default new Vuex.Store({
     },
     fileNameChange(state, payload) {
       state.blogPhotoName = payload;
+    },
+    setProfileAdmin(state, payload) {
+      state.profileAdmin = payload
     },
     setBlogState(state, payload) {
       state.blogTitle = payload.blogTitle;
@@ -92,6 +94,8 @@ export default new Vuex.Store({
       const dbResults = await dataBase.get();
       commit("setProfileInfo", dbResults);
       commit("setProfileInitials");
+      const admin = dbResults.data().isAdmin
+      commit("setProfileAdmin", admin)
     },
     async updateUserSettings({ commit, state }) {
       const dataBase = await db.collection("users").doc(state.profileId);
